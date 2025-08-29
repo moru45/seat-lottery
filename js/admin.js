@@ -159,6 +159,16 @@ class SeatLotteryAdmin {
             window.seatStore.updateLayout({ rows, cols });
             window.seatStore.resetSeats();
             setTimeout(() => this.seatMapViewer.resetView(), 100);
+            
+            // GA4 レイアウト保存イベント送信
+            if (typeof sendCustomEvent === 'function') {
+                sendCustomEvent('layout_save', {
+                    rows: rows,
+                    cols: cols,
+                    total_seats: rows * cols
+                });
+            }
+            
             this.showMessage('レイアウトを更新しました');
         }
     }
@@ -227,6 +237,14 @@ class SeatLotteryAdmin {
                 window.seatStore.importPreset(e.target.result);
                 this.loadCurrentSettings();
                 setTimeout(() => this.seatMapViewer.resetView(), 100);
+                
+                // GA4 プリセット読み込みイベント送信
+                if (typeof sendCustomEvent === 'function') {
+                    sendCustomEvent('layout_load', {
+                        source: 'file_import'
+                    });
+                }
+                
                 this.showMessage('設定をインポートしました');
             } catch (error) {
                 this.showError('インポートに失敗しました: ' + error.message);
@@ -246,6 +264,14 @@ class SeatLotteryAdmin {
             window.seatStore.importPreset(presetData);
             this.loadCurrentSettings();
             setTimeout(() => this.seatMapViewer.resetView(), 100);
+            
+            // GA4 プリセット読み込みイベント送信
+            if (typeof sendCustomEvent === 'function') {
+                sendCustomEvent('layout_load', {
+                    source: 'text_input'
+                });
+            }
+            
             this.showMessage('プリセットを読み込みました');
         } catch (error) {
             this.showError('読み込みに失敗しました: ' + error.message);

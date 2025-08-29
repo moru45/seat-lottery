@@ -178,6 +178,19 @@ class SeatLotteryApp {
             await new Promise(resolve => setTimeout(resolve, 500));
             
             const result = await window.seatStore.drawSeats(this.selectedGroupSize);
+            
+            // GA4 抽選イベント送信
+            const state = window.seatStore.getState();
+            const isContiguous = this.checkContiguous(result);
+            if (typeof sendCustomEvent === 'function') {
+                sendCustomEvent('draw', {
+                    group_size: this.selectedGroupSize,
+                    assigned_count: result.length,
+                    contiguous: isContiguous,
+                    remaining: state.seatState.remaining.size
+                });
+            }
+            
             this.displayResult(result);
             
         } catch (error) {
@@ -230,6 +243,13 @@ class SeatLotteryApp {
     }
 
     resetLottery() {
+        // GA4 リセットイベント送信
+        if (typeof sendCustomEvent === 'function') {
+            sendCustomEvent('reset', {
+                action: 'new_lottery'
+            });
+        }
+        
         // 結果表示を隠す
         this.elements.resultSection.style.display = 'none';
         
@@ -241,6 +261,21 @@ class SeatLotteryApp {
         // ハイライト解除のため空の配列をセット
         window.seatStore.state.seatState.lastDrawn = [];
         window.seatStore.notify();
+    }
+    
+    // 連番チェック関数
+    checkContiguous(seats) {
+        if (seats.length <= 1) return true;
+        
+        // 同じ行かつ連続した列番号かチェック
+        const sameRow = seats.every(seat => seat.row === seats[0].row);
+        if (!sameRow) return false;
+        
+        const cols = seats.map(seat => seat.col).sort((a, b) => a - b);
+        for (let i = 1; i < cols.length; i++) {
+            if (cols[i] !== cols[i-1] + 1) return false;
+        }
+        return true;
     }
 
     destroy() {

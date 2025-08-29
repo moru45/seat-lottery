@@ -216,8 +216,34 @@ localStorage.getItem('seat-lottery') // 設定データ取得
 
 MIT License
 
+## Google Analytics 4 (GA4) 確認手順
+
+### DebugView での確認方法
+
+1. **GA4プロパティ** → **DebugView** にアクセス
+2. **測定ID**: `G-EHJMXX4TW2`
+3. **確認項目**:
+   - `page_view`: 各画面遷移時に送信
+   - `draw`: 抽選実行時（group_size, assigned_count, contiguous, remaining）
+   - `reset`: 新しい抽選ボタン押下時
+   - `layout_save`: レイアウト保存時（rows, cols, total_seats）
+   - `layout_load`: プリセット読み込み時（source: file_import/text_input）
+
+### 計測パス
+- メニュー画面: `/` または `/index.html`
+- 座席抽選画面: `/lottery.html`
+- 管理画面: `/admin.html`
+
+### プライバシーポリシー
+利用状況分析のためGoogle Analytics 4を使用しています。  
+詳細は [プライバシーポリシー](privacy.html) をご参照ください。
+
 ## 更新履歴
 
+- v1.1.0: GA4分析機能追加
+  - Google Analytics 4統合
+  - カスタムイベント計測
+  - SPA対応ページビュー送信
 - v1.0.0: 初回リリース
   - 基本的な座席抽選機能
   - キオスク運用対応

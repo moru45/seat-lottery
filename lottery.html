@@ -4,6 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>座席抽選システム</title>
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EHJMXX4TW2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        // SPA対応：初回自動PVは送らない
+        gtag('config', 'G-EHJMXX4TW2', {
+            send_page_view: false
+        });
+        
+        // ページビュー送信関数
+        function sendPageView(page_title, page_location) {
+            gtag('event', 'page_view', {
+                page_title: page_title,
+                page_location: page_location
+            });
+        }
+        
+        // カスタムイベント送信関数
+        function sendCustomEvent(event_name, parameters = {}) {
+            gtag('event', event_name, parameters);
+        }
+    </script>
+    
     <link rel="stylesheet" href="css/style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#667eea">
@@ -94,5 +121,14 @@
     <script src="js/store.js"></script>
     <script src="js/SeatMapViewer.js"></script>
     <script src="js/app.js"></script>
+    
+    <script>
+        // ページ読み込み時にページビューを送信
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof sendPageView === 'function') {
+                sendPageView('座席抽選画面', window.location.href);
+            }
+        });
+    </script>
 </body>
 </html>
