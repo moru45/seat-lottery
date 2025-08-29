@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>座席抽選システム</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <link rel="apple-touch-icon" href="maskable-512-text.png">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 左ペイン: 座席表 -->
+        <div class="left-pane">
+            <div class="seat-map-container">
+                <canvas id="seatMapCanvas"></canvas>
+                <div class="map-controls">
+                    <button id="resetViewBtn" class="control-btn">表示リセット</button>
+                </div>
+            </div>
+            
+            <!-- 凡例 -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color available"></div>
+                    <span>空席</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color used"></div>
+                    <span>使用済み</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color highlight"></div>
+                    <span>今回の席</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color aisle"></div>
+                    <span>通路</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右ペイン: 抽選パネル -->
+        <div class="right-pane">
+            <div class="lottery-panel">
+                <h1>座席抽選</h1>
+                
+                <!-- 残席表示 -->
+                <div class="remaining-seats">
+                    <span class="remaining-count" id="remainingCount">0</span>
+                    <span class="remaining-label">席 残り</span>
+                </div>
+
+                <!-- 人数選択 -->
+                <div class="group-size-section">
+                    <h2>人数を選択してください</h2>
+                    <div class="number-buttons" id="numberButtons">
+                        <!-- 動的生成 -->
+                    </div>
+                    <div class="selected-size" id="selectedSize">人数を選択してください</div>
+                </div>
+
+                <!-- 抽選ボタン -->
+                <div class="lottery-button-section">
+                    <button id="lotteryBtn" class="lottery-btn" disabled>抽選する</button>
+                    <div class="lottery-status" id="lotteryStatus"></div>
+                </div>
+
+                <!-- 結果表示 -->
+                <div class="result-section" id="resultSection" style="display: none;">
+                    <h2>抽選結果</h2>
+                    <div class="seat-numbers" id="seatNumbers">
+                        <!-- 結果を表示 -->
+                    </div>
+                    <button id="newLotteryBtn" class="new-lottery-btn">新しく抽選する</button>
+                </div>
+
+                <!-- 満席メッセージ -->
+                <div class="full-message" id="fullMessage" style="display: none;">
+                    <h2>満席です</h2>
+                    <p>申し訳ございませんが、<br>すべての座席が埋まりました。</p>
+                </div>
+            </div>
+
+            <!-- 管理画面リンク -->
+            <div class="admin-link">
+                <a href="admin.html">管理画面</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/store.js"></script>
+    <script src="js/SeatMapViewer.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

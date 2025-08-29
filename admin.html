@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>座席抽選システム - 管理画面</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <link rel="apple-touch-icon" href="maskable-512-text.png">
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1>座席抽選システム - 管理画面</h1>
+            <div class="header-actions">
+                <button id="savePresetBtn" class="action-btn">設定保存</button>
+                <button id="resetSeatsBtn" class="action-btn danger">座席リセット</button>
+                <a href="index.html" class="action-btn">来場者画面</a>
+            </div>
+        </header>
+
+        <div class="admin-content">
+            <!-- 左パネル: 設定 -->
+            <div class="admin-left-panel">
+                
+                <!-- レイアウト設定 -->
+                <section class="admin-section">
+                    <h2>レイアウト設定</h2>
+                    <div class="form-group">
+                        <label>行数:</label>
+                        <input type="number" id="rowsInput" min="1" max="50" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label>列数:</label>
+                        <input type="number" id="colsInput" min="1" max="50" value="10">
+                    </div>
+                    <button id="applyLayoutBtn" class="apply-btn">レイアウト適用</button>
+                </section>
+
+                <!-- 番号付け設定 -->
+                <section class="admin-section">
+                    <h2>番号付け設定</h2>
+                    <div class="form-group">
+                        <label>番号付け方式:</label>
+                        <select id="numberingType">
+                            <option value="row-major">行優先 (A1,A2,A3...)</option>
+                            <option value="snake">蛇腹 (A1,A2,A3,B3,B2,B1...)</option>
+                            <option value="col-major">列優先 (A1,B1,C1...)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>行ラベル:</label>
+                        <select id="rowLabels">
+                            <option value="A">英字 (A, B, C...)</option>
+                            <option value="1">数字 (1, 2, 3...)</option>
+                            <option value="あ">ひらがな (あ, い, う...)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>ゼロ埋め桁数:</label>
+                        <input type="number" id="zeroPad" min="1" max="3" value="2">
+                    </div>
+                    <div class="form-group">
+                        <label>ステージ位置:</label>
+                        <select id="stagePosition">
+                            <option value="top">上</option>
+                            <option value="bottom">下</option>
+                            <option value="left">左</option>
+                            <option value="right">右</option>
+                        </select>
+                    </div>
+                    <button id="applyNumberingBtn" class="apply-btn">番号付け適用</button>
+                </section>
+
+                <!-- 抽選設定 -->
+                <section class="admin-section">
+                    <h2>抽選設定</h2>
+                    <div class="form-group">
+                        <label>最大グループ人数:</label>
+                        <input type="number" id="maxGroup" min="1" max="20" value="4">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="strictConsecutive">
+                            厳密連番モード（連番がない場合に確認）
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>4桁PINロック（任意）:</label>
+                        <input type="text" id="pinLock" placeholder="0000" maxlength="4" pattern="[0-9]{4}">
+                    </div>
+                    <button id="applySettingsBtn" class="apply-btn">設定適用</button>
+                </section>
+
+                <!-- プリセット管理 -->
+                <section class="admin-section">
+                    <h2>プリセット管理</h2>
+                    <div class="form-group">
+                        <button id="exportBtn" class="preset-btn">設定をエクスポート</button>
+                        <button id="importBtn" class="preset-btn">設定をインポート</button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                    </div>
+                    <div class="form-group">
+                        <textarea id="presetData" placeholder="JSON設定データ..." rows="6"></textarea>
+                    </div>
+                    <button id="loadPresetBtn" class="preset-btn">プリセット読み込み</button>
+                </section>
+
+                <!-- 状態表示 -->
+                <section class="admin-section">
+                    <h2>状態</h2>
+                    <div class="status-info">
+                        <div class="status-item">
+                            <span class="status-label">総座席数:</span>
+                            <span id="totalSeats" class="status-value">0</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">残席数:</span>
+                            <span id="remainingSeats" class="status-value">0</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">使用済み:</span>
+                            <span id="usedSeats" class="status-value">0</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">開始時刻:</span>
+                            <span id="startTime" class="status-value">未開始</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- 右パネル: 座席表 -->
+            <div class="admin-right-panel">
+                <div class="seat-editor-container">
+                    <div class="editor-header">
+                        <h3>座席エディタ</h3>
+                        <div class="editor-controls">
+                            <button id="editModeBtn" class="toggle-btn">編集モード ON</button>
+                            <button id="resetViewBtn" class="control-btn">表示リセット</button>
+                        </div>
+                    </div>
+                    
+                    <div class="editor-instructions">
+                        <p><strong>編集方法:</strong> セルをクリック/ドラッグで種別変更 (座席→通路→ブロック)</p>
+                    </div>
+
+                    <canvas id="adminSeatMapCanvas"></canvas>
+                    
+                    <!-- エディタ凡例 -->
+                    <div class="editor-legend">
+                        <div class="legend-item">
+                            <div class="legend-color seat"></div>
+                            <span>座席</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color aisle"></div>
+                            <span>通路</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color block"></div>
+                            <span>ブロック</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/store.js"></script>
+    <script src="js/SeatMapViewer.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
