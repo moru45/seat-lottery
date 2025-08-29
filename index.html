@@ -3,96 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>座席抽選システム</title>
+    <title>座席抽選システム - メニュー</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#667eea">
     <link rel="apple-touch-icon" href="maskable-512-text.png">
+    <style>
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+        }
+        
+        .menu-title {
+            color: white;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .menu-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 20px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        
+        .menu-buttons {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .menu-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 300px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .menu-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            background: white;
+        }
+        
+        .menu-btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .menu-btn-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .menu-btn-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .menu-btn-desc {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .menu-title {
+                font-size: 36px;
+            }
+            
+            .menu-buttons {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .menu-btn {
+                width: 280px;
+                height: 160px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- 左ペイン: 座席表 -->
-        <div class="left-pane">
-            <div class="seat-map-container">
-                <canvas id="seatMapCanvas"></canvas>
-                <div class="map-controls">
-                    <button id="resetViewBtn" class="control-btn">表示リセット</button>
-                </div>
-            </div>
+    <div class="menu-container">
+        <h1 class="menu-title">座席抽選システム</h1>
+        <p class="menu-subtitle">キオスク向け座席管理システム</p>
+        
+        <div class="menu-buttons">
+            <a href="lottery.html" class="menu-btn">
+                <div class="menu-btn-icon">🎯</div>
+                <div class="menu-btn-title">座席抽選</div>
+                <div class="menu-btn-desc">来場者向け<br>座席抽選画面</div>
+            </a>
             
-            <!-- 凡例 -->
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color available"></div>
-                    <span>空席</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color used"></div>
-                    <span>割当済み</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color aisle"></div>
-                    <span>通路</span>
-                </div>
-            </div>
-            
-            <!-- メニューに戻るボタン -->
-            <div class="back-to-menu">
-                <a href="top.html" class="back-btn">メニューに戻る</a>
-            </div>
-        </div>
-
-        <!-- 右ペイン: 抽選パネル -->
-        <div class="right-pane">
-            <div class="lottery-panel">
-                <h1>座席抽選</h1>
-                
-                <!-- 残席表示 -->
-                <div class="remaining-seats">
-                    <span class="remaining-count" id="remainingCount">0</span>
-                    <span class="remaining-label">席 残り</span>
-                </div>
-
-                <!-- 人数選択 -->
-                <div class="group-size-section">
-                    <h2>人数を選択してください</h2>
-                    <div class="number-buttons" id="numberButtons">
-                        <!-- 動的生成 -->
-                    </div>
-                    <div class="selected-size" id="selectedSize">人数を選択してください</div>
-                </div>
-
-                <!-- 抽選ボタン -->
-                <div class="lottery-button-section">
-                    <button id="lotteryBtn" class="lottery-btn" disabled>抽選する</button>
-                    <div class="lottery-status" id="lotteryStatus"></div>
-                </div>
-
-                <!-- 結果表示 -->
-                <div class="result-section" id="resultSection" style="display: none;">
-                    <h2>抽選結果</h2>
-                    <div class="seat-numbers" id="seatNumbers">
-                        <!-- 結果を表示 -->
-                    </div>
-                    <button id="newLotteryBtn" class="new-lottery-btn">新しく抽選する</button>
-                </div>
-
-                <!-- 満席メッセージ -->
-                <div class="full-message" id="fullMessage" style="display: none;">
-                    <h2>満席です</h2>
-                    <p>申し訳ございませんが、<br>すべての座席が埋まりました。</p>
-                </div>
-            </div>
-
-            <!-- 管理画面リンク -->
-            <div class="admin-link">
-                <a href="admin.html">管理画面</a>
-            </div>
+            <a href="admin.html" class="menu-btn">
+                <div class="menu-btn-icon">⚙️</div>
+                <div class="menu-btn-title">管理画面</div>
+                <div class="menu-btn-desc">レイアウト設定<br>座席エディタ</div>
+            </a>
         </div>
     </div>
-
-    <script src="js/store.js"></script>
-    <script src="js/SeatMapViewer.js"></script>
-    <script src="js/app.js"></script>
 </body>
 </html>
