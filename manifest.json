@@ -2,7 +2,7 @@
   "name": "座席抽選システム",
   "short_name": "座席抽選",
   "description": "キオスク向け座席抽選システム",
-  "start_url": "./",
+  "start_url": "./top.html",
   "display": "fullscreen",
   "theme_color": "#667eea",
   "background_color": "#667eea",

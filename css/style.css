@@ -729,3 +729,27 @@ body {
 :-moz-full-screen {
     background: black;
 }
+
+/* メニューに戻るボタン */
+.back-to-menu {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.back-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
